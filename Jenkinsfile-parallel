@@ -1,0 +1,28 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('parallel test') {
+            parallel {
+                stage('unit tests') {
+                    steps {
+                        sh 'echo "Unit tests.."'
+                        sh 'sleep 3'
+                    }
+                }
+                stage('integration test') {
+                    steps {
+                        sh 'echo "integration tests.."'
+                        sh 'sleep 3'
+                    }
+                }
+                stage('Lint') {
+                    steps {
+                        sh 'echo "Lint..."'
+                        sh 'sleep 3'
+                    }
+                }
+            }
+        }
+    }
+}
