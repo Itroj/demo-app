@@ -1,0 +1,17 @@
+pipeline {
+    agent any
+
+    environment {
+        APP_NAME = 'demo_app'
+        VERSION = '1.0.0'
+    }
+
+    stages {
+        stage('print env') {
+            steps {
+                sh 'echo "App: $APP_NAME"'
+                sh 'echo "Version: $VERSION"'
+            }
+        }
+    }
+}
