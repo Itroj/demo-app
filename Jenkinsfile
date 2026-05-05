@@ -21,15 +21,13 @@ pipeline {
         }
 
         stage('Test') {
+            when {
+                expression {
+                    return params.RUN_TESTS
+                }
+            }
             steps {
-                when {
-                    expression {
-                        return params.RUN_TESTS
-                    }
-                }
-                steps {
-                    sh 'echo "testing..."'
-                }
+                sh 'echo "testing..."'
             }
         }
 
