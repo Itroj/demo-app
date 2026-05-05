@@ -1,41 +1,42 @@
 pipeline {
-    agent any 
+    agent any
+
+    parameters {
+        choice(name: 'ENVIRONMENT', choices: ['dev', 'test', 'prod'], description: 'Wybierz srodowisko')
+        booleanParam(name: 'RUN_TESTS', defaultValue: true, description: 'czy uruchomic testy?')
+    }
 
     stages {
-        stage('checkout') {
+        stage('info') {
             steps {
-            echo 'kod zostal pobrany z repozytorium'
+                echo "srodowisko: ${params.ENVIRONMENT}"
+                echo "uruchomic testy: ${params.RUN_TESTS}"
             }
         }
 
         stage('build') {
             steps {
-                sh 'mkdir -p build'
-                sh 'echo "Hello from demo app" > build/app.txt'
+                sh 'echo "building..."'
             }
         }
 
-        stage('test') {
-            steps  {
-                sh 'test -f build/app.txt'
-                sh 'grep "Hello" build/app.txt'
-            }
-        }
-
-        stage('package') {
+        stage('Test') {
             steps {
-                sh 'tar -czf app.tar.gz build/'
+                when {
+                    expression {
+                        return params.RUN_TESTS
+                    }
+                }
+                steps {
+                    sh 'echo "testing..."'
+                }
             }
         }
-    }
 
-    post {
-        success {
-            echo 'Build, test i package zakonczone sukcesem'
-        }
-
-        failure {
-            echo 'cos poszlo nie tak'
+        stage('deploy') {
+            steps {
+                echo "deploy na srodowisko: ${params.ENVIRONMENT}"
+            }
         }
     }
 }
